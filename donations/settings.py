@@ -76,6 +76,7 @@ WSGI_APPLICATION = 'donations.wsgi.application'
 
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -122,6 +123,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 try:
     from donations.localsettings import DATABASES
 except ModuleNotFoundError:
-    print("Brak konfiguracji bazy danych w pliku localsettings.py!")
-    print("Uzupełnij dane i spróbuj ponownie!")
+    print("No DB config in file")
+    print("Try again")
+    exit(0)
+
+try:
+    from donations.secret_settings import SECRET_KEY
+except ModuleNotFoundError:
+    print("No secret key found")
     exit(0)
