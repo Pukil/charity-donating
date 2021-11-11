@@ -24,10 +24,14 @@ class Institution(models.Model):
     categories = models.ManyToManyField(Category)
     type = models.CharField(max_length=128, choices=CHOICES, default=CHOICES[0])
 
+    def get_cat(self):
+        return_string = ""
+        for cat in self.categories.all():
+            return_string += f"{cat.name}, "
+
+        return return_string.rstrip(", ")
 
 class Donation(models.Model):
-
-
     quantity = models.IntegerField()
     categories = models.ManyToManyField(Category)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
@@ -45,7 +49,7 @@ class Donation(models.Model):
         for cat in self.categories.all():
             return_string += f"{cat.name}, "
 
-        return return_string
+        return return_string.rstrip(", ")
 
     def __str__(self):
         return f"Organizacja: {self.institution}, Kategorie: {self.get_cat()}, ilość worków: {self.quantity}"
