@@ -26,6 +26,8 @@ class Institution(models.Model):
 
 
 class Donation(models.Model):
+
+
     quantity = models.IntegerField()
     categories = models.ManyToManyField(Category)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
@@ -35,5 +37,15 @@ class Donation(models.Model):
     zip_code = models.CharField(max_length=6)
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
-    pick_up_comment = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
+    pick_up_comment = models.TextField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
+
+    def get_cat(self):
+        return_string = ""
+        for cat in self.categories.all():
+            return_string += f"{cat.name}, "
+
+        return return_string
+
+    def __str__(self):
+        return f"Organizacja: {self.institution}, Kategorie: {self.get_cat()}, ilość worków: {self.quantity}"
