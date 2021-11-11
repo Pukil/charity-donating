@@ -18,7 +18,10 @@ class LandingPage(View):
 
         context = {
             'bags_count': bags,
-            'institution_count': institutions
+            'institution_count': institutions,
+            'foundations': Institution.objects.filter(type='fundacja'),
+            'organisations': Institution.objects.filter(type='organizacja pozarządowa'),
+            'locals': Institution.objects.filter(type='zbiórka lokalna')
         }
         return render(request, 'charity_donation/index.html', context)
 
