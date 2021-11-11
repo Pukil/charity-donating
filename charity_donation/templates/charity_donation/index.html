@@ -1,21 +1,16 @@
 {% extends 'charity_donation/base.html' %}
 {% load static %}
-
 {% block headerclass %}class="header--main-page"{% endblock %}
 {% block header %}
     <div class="slogan container container--90">
         <div class="slogan--item">
-          <h1>
-            Zacznij pomagać!<br />
-            Oddaj niechciane rzeczy w zaufane ręce
-          </h1>
+            <h1>
+                Zacznij pomagać!<br/>
+                Oddaj niechciane rzeczy w zaufane ręce
+            </h1>
         </div>
-      </div>
-    {% endblock %}
-
-
-
-
+    </div>
+{% endblock %}
 {% block content %}
     <section id="stats" class="stats">
         <div class="container container--85">
@@ -62,7 +57,7 @@
             </div>
         </div>
 
-        <a href="#" class="btn btn--large">Załóż konto</a>
+        <a href="{% url 'register' %}" class="btn btn--large">Załóż konto</a>
     </section>
 
     <section id="about-us" class="about-us">
