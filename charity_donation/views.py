@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse_lazy
 from django.views import View
 
 from charity_donation.models import Donation, Institution
@@ -39,3 +41,15 @@ class Login(View):
 class Register(View):
     def get(self, request):
         return render(request, 'charity_donation/register.html')
+
+    def post(self, request):
+        login = request.POST.get('email')
+        if request.POST.get('password') == request.POST.get('password2'):
+            password = request.POST.get('password')
+            User.objects.create_user(login, password=password)
+            return redirect(reverse_lazy('login'))
+        else:
+            return render(request, 'charity_donation/register.html', {'error_message': "Hasła nie są zgodne"})
+
+
+
