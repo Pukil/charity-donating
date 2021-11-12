@@ -252,4 +252,14 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
+
+  const categories = document.getElementsByName('categories');
+
+  categories.forEach(function (category){
+    const checkedCategories = [];
+    if(category.checked){
+      checkedCategories.push(category.id)
+    }
+    console.log(checkedCategories)
+  })
 });
