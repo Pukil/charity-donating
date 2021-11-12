@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 
-from charity_donation.models import Donation, Institution
+from charity_donation.models import Donation, Institution, Category
 
 
 class LandingPage(View):
@@ -34,7 +34,10 @@ class AddDonation(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
     def get(self, request):
-        return render(request, 'charity_donation/form.html')
+        context = {
+            'categories': Category.objects.all()
+        }
+        return render(request, 'charity_donation/form.html', context)
 
 
 class Login(View):
