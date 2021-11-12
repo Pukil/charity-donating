@@ -12,7 +12,18 @@
 <header {% block headerclass %}{% endblock %}>
     <nav class="container container--70">
         <ul class="nav--actions">
-            <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+            {% if user.is_authenticated %}
+                <li class="logged-user">
+                    Witaj {{ user.first_name }}
+                    <ul class="dropdown">
+                        <li><a href="#">Profil</a></li>
+                        <li><a href="#">Ustawienia</a></li>
+                        <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+            {% endif %}
             <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
         </ul>
         <ul>
