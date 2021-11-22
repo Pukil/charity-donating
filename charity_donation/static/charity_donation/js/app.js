@@ -301,13 +301,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 switch (institution.getAttribute('data-type')) {
                     case 'fundacja':
                         document.querySelector('#chosen-institution').innerHTML = `Dla fundacji "${institution.getAttribute('data-name')}"`
-                        break
+                        break;
                     case 'organizacja pozarządowa':
                         document.querySelector('#chosen-institution').innerHTML = `Dla organizacji pozarządowej "${institution.getAttribute('data-name')}"`
-                        break
+                        break;
                     case 'zbiórka lokalna':
                         document.querySelector('#chosen-institution').innerHTML = `Dla zbiórki lokalnej "${institution.getAttribute('data-name')}"`
-                        break
+                        break;
                 }
 
             }
@@ -326,6 +326,12 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector('#summary-info').innerHTML = document.querySelector("#more-info").value
         }
 
+    })
+
+//    submit button
+    const submitButton = document.querySelector('#submit-button')
+    submitButton.addEventListener("click", function (){
+        document.querySelector("#form").submit()
     })
 
 
