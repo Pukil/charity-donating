@@ -258,21 +258,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const firstNextButton = document.querySelector('button');
     firstNextButton.addEventListener("click", function () {
-        const checked = [];
+        const checkedArray = [];
         const categories = Array.from(document.querySelectorAll('#category'))
         const institutions = document.querySelectorAll('#institution')
         categories.forEach(function (element) {
             if (element.checked) {
-                checked.push(element.value)
+                checkedArray.push(element.value)
             }
         })
         institutions.forEach(function (institution) {
-            if (Array.from(institution.getAttribute('data-cats')).some(r => checked.includes(r))) {
-                institution.hidden = false
-            } else {
-                institution.hidden = true
-            }
+            institution.hidden = !Array.from(institution.getAttribute('data-cats')).some(r => checkedArray.includes(r));
         })
+        if(checkedArray.length === 0){institutions.forEach(institution => institution.hidden = false)}
     })
 
 });

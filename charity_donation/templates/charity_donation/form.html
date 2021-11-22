@@ -104,7 +104,7 @@
                     {% for organisation in organisations %}
                         <div id="institution" class="form-group form-group--checkbox"
                              data-cats="{% for cat in organisation.categories.all %}{{ cat.pk }}{% endfor %}">
-                            {% for cat in organisation.categories.all %}{{ cat.pk }}{% endfor %}<label>
+                            <label>
                                 <input type="radio" name="organization" value="old" />
                                 <span class="checkbox radio"></span>
                                 <span class="description">
