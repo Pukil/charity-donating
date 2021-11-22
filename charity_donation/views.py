@@ -33,12 +33,31 @@ class LandingPage(View):
 class AddDonation(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
+
     def get(self, request):
         context = {
             'categories': Category.objects.all(),
             'organisations': Institution.objects.all()
         }
         return render(request, 'charity_donation/form.html', context)
+
+    def post(self, request):
+        quantity = request.POST.get('bags')
+        categories = request.POST.get('categories')
+        institution = Institution.objects.get(pk=int(request.POST.get('organization')))
+        address = request.POST.get('address')
+        phone_number = int(request.POST.get('phone').replace(" ", ""))
+        city = request.POST.get('city')
+        zip_code = request.POST.get('postcode')
+        pick_up_date = request.POST.get('data')
+        pick_up_time = request.POST.get('time')
+        pick_up_comment = request.POST.get('more_info')
+        user = request.user
+        instance = Donation.objects.create(quantity=quantity, institution=institution, address=address,
+                                phone_number=phone_number, city=city, zip_code=zip_code, pick_up_date=pick_up_date,
+                                pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
+        instance.categories.set(categories)
+        return render(request, 'charity_donation/form-confirmation.html')
 
 
 class Login(View):
@@ -58,8 +77,6 @@ class Login(View):
                     return redirect(reverse_lazy('login'))
         except User.DoesNotExist:
             return redirect(reverse_lazy('register'))
-
-
 
 
 class LogOut(View):
