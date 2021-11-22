@@ -269,7 +269,64 @@ document.addEventListener("DOMContentLoaded", function () {
         institutions.forEach(function (institution) {
             institution.hidden = !Array.from(institution.getAttribute('data-cats')).some(r => checkedArray.includes(r));
         })
-        if(checkedArray.length === 0){institutions.forEach(institution => institution.hidden = false)}
+        if (checkedArray.length === 0) {
+            institutions.forEach(institution => institution.hidden = false)
+        }
     })
+
+
+//    summary
+
+    const allInstitutions = document.querySelectorAll('#institution')
+    const triggerButton = document.querySelector('#trigger-button')
+    triggerButton.addEventListener("click", function () {
+        const bagNumber = document.querySelector('#bagnumber').value
+        switch (bagNumber) {
+            case '1':
+                document.querySelector('#bags').innerHTML = `${bagNumber} worek`
+                break;
+            case '2':
+            case '3':
+            case '4':
+                document.querySelector('#bags').innerHTML = `${bagNumber} worki`
+                break;
+            default:
+                document.querySelector('#bags').innerHTML = `${bagNumber} worków`
+                break;
+        }
+
+        allInstitutions.forEach(function (institution) {
+            if (institution.firstElementChild.firstElementChild.checked) {
+
+                switch (institution.getAttribute('data-type')) {
+                    case 'fundacja':
+                        document.querySelector('#chosen-institution').innerHTML = `Dla fundacji "${institution.getAttribute('data-name')}"`
+                        break
+                    case 'organizacja pozarządowa':
+                        document.querySelector('#chosen-institution').innerHTML = `Dla organizacji pozarządowej "${institution.getAttribute('data-name')}"`
+                        break
+                    case 'zbiórka lokalna':
+                        document.querySelector('#chosen-institution').innerHTML = `Dla zbiórki lokalnej "${institution.getAttribute('data-name')}"`
+                        break
+                }
+
+            }
+        })
+
+        document.querySelector('#summary-address').innerHTML = document.querySelector("#address").value
+        document.querySelector('#summary-city').innerHTML = document.querySelector("#city").value
+        document.querySelector('#summary-postcode').innerHTML = document.querySelector("#postcode").value
+        document.querySelector('#summary-phone').innerHTML = document.querySelector("#phone").value
+
+        document.querySelector('#summary-data').innerHTML = document.querySelector("#data").value
+        document.querySelector('#summary-time').innerHTML = document.querySelector("#time").value
+        if(document.querySelector("#more-info").value.length === 0){
+            document.querySelector('#summary-info').innerHTML = 'Brak uwag'
+        } else {
+            document.querySelector('#summary-info').innerHTML = document.querySelector("#more-info").value
+        }
+
+    })
+
 
 });
