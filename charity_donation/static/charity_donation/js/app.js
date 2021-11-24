@@ -320,17 +320,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelector('#summary-data').innerHTML = document.querySelector("#data").value
         document.querySelector('#summary-time').innerHTML = document.querySelector("#time").value
-        if(document.querySelector("#more-info").value.length === 0){
+        if (document.querySelector("#more-info").value.length === 0) {
             document.querySelector('#summary-info').innerHTML = 'Brak uwag'
         } else {
             document.querySelector('#summary-info').innerHTML = document.querySelector("#more-info").value
         }
-
     })
 
 //    submit button
     const submitButton = document.querySelector('#submit-button')
-    submitButton.addEventListener("click", function (){
+    submitButton.addEventListener("click", function () {
         document.querySelector("#form").submit()
     })
 
