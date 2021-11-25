@@ -61,7 +61,9 @@ class AddDonation(LoginRequiredMixin, View):
 
 
 class ProfileView(LoginRequiredMixin, View):
-    def get(self, request):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+    def get(self, request, pk):
         return render(request, 'charity_donation/profile.html')
 
 
@@ -100,7 +102,7 @@ class Register(View):
         last_name = request.POST.get('surname')
         if request.POST.get('password') == request.POST.get('password2'):
             password = request.POST.get('password')
-            User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name)
+            User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name, email=login)
             return redirect(reverse_lazy('login'))
         else:
             return render(request, 'charity_donation/register.html', {'error_message': "Hasła nie są zgodne"})
