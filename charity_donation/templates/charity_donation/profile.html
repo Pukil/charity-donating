@@ -10,7 +10,20 @@
                     <li>Imię: {{ user.first_name }}</li>
                     <li>Nazwisko: {{ user.last_name }}</li>
                     <li>Email: {{ user.email }}</li>
+                </ul><br>
+            <div class="help--slides active">
+                Lista darów które zostały przez Ciebie przekazane:
+                <ul class="help--slides-items">
+                    {% for donation in donations %}
+                        <li>
+                        <div class="col">
+                            Ilość worków: {{ donation.quantity }}, organizacja: {{ donation.institution }},
+                        kategorie: {{ donation.get_cat }}, data przekazania: {{ donation.pick_up_date }}
+                        </div>
+                        </li>
+                    {% endfor %}
                 </ul>
+            </div>
             </h1>
         </div>
     </div>
