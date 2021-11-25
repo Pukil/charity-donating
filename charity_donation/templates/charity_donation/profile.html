@@ -1,0 +1,17 @@
+{% extends 'charity_donation/base.html' %}
+{% load static %}
+{% block headerclass %}class="header--form-page"{% endblock %}
+{% block header %}
+    <div class="slogan container container--90">
+        <div class="slogan--item">
+            <h1>
+                Witaj {{ user }}<br/>
+                <ul class="help--slides-items">
+                    <li>Imię: {{ user.first_name }}</li>
+                    <li>Nazwisko: {{ user.last_name }}</li>
+                    <li>Email: {{ user.email }}</li>
+                </ul>
+            </h1>
+        </div>
+    </div>
+{% endblock %}
