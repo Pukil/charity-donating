@@ -60,6 +60,11 @@ class AddDonation(LoginRequiredMixin, View):
         return render(request, 'charity_donation/form-confirmation.html')
 
 
+class ProfileView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'charity_donation/profile.html')
+
+
 class Login(View):
     def get(self, request):
         return render(request, 'charity_donation/login.html')
