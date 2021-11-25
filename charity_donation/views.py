@@ -43,7 +43,7 @@ class AddDonation(LoginRequiredMixin, View):
 
     def post(self, request):
         quantity = request.POST.get('bags')
-        categories = request.POST.get('categories')
+        categories = request.POST.getlist('categories')
         institution = Institution.objects.get(pk=int(request.POST.get('organization')))
         address = request.POST.get('address')
         phone_number = int(request.POST.get('phone').replace(" ", ""))
@@ -56,7 +56,8 @@ class AddDonation(LoginRequiredMixin, View):
         instance = Donation.objects.create(quantity=quantity, institution=institution, address=address,
                                 phone_number=phone_number, city=city, zip_code=zip_code, pick_up_date=pick_up_date,
                                 pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
-        instance.categories.set(categories)
+        for category in categories:
+            instance.categories.add(category)
         return render(request, 'charity_donation/form-confirmation.html')
 
 
@@ -64,7 +65,8 @@ class ProfileView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
     def get(self, request, pk):
-        return render(request, 'charity_donation/profile.html')
+        context = {'donations': Donation.objects.filter(user=User.objects.get(pk=pk))}
+        return render(request, 'charity_donation/profile.html', context)
 
 
 class Login(View):
