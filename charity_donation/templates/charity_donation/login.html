@@ -4,6 +4,7 @@
  {% block header %}
 <section class="login-page">
       <h2>Zaloguj się</h2>
+    {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
       <form method="post" action="">
           {% csrf_token %}
         <div class="form-group">
