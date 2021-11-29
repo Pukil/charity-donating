@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -65,9 +67,23 @@ class ProfileView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
     def get(self, request, pk):
-        context = {'donations': Donation.objects.filter(user=User.objects.get(pk=pk))}
+        context = {
+            'donations_taken': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=True),
+            'donations_waiting': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=False)
+        }
         return render(request, 'charity_donation/profile.html', context)
 
+    def post(self, request, pk):
+        donations = Donation.objects.filter(user=request.user)
+        for donation in donations:
+            if request.POST.get(f"is_taken_{donation.pk}"):
+                donation.is_taken = True
+                donation.taken_check_date = datetime.date.today()
+                donation.save()
+            else:
+                donation.is_taken = False
+                donation.save()
+        return redirect(reverse_lazy(f'profile', kwargs={'pk': pk}))
 
 class Login(View):
     def get(self, request):

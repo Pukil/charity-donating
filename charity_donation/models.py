@@ -43,6 +43,8 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
+    is_taken = models.BooleanField(default=False, blank=True, null=True)
+    taken_check_date = models.DateField(default=None, blank=True, null=True)
 
     def get_cat(self):
         return_string = ""
