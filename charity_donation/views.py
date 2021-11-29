@@ -85,6 +85,15 @@ class ProfileView(LoginRequiredMixin, View):
                 donation.save()
         return redirect(reverse_lazy(f'profile', kwargs={'pk': pk}))
 
+
+class EditProfileView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request, pk):
+        return render(request, 'charity_donation/edit_profile.html')
+
+
 class Login(View):
     def get(self, request):
         return render(request, 'charity_donation/login.html')
