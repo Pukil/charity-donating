@@ -334,4 +334,8 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 
 
+    // donation slide change
+    const donationButtons = document.querySelector('.help--buttons');
+
 });
+

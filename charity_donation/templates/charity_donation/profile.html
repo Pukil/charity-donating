@@ -16,28 +16,65 @@
         </div>
         <div class="slogan--item">
             <div class="help--slides active">
-                <h1>Lista darów które zostały przez Ciebie przekazane:</h1>
-                <ul class="help--slides-items">
+                <section id="help" class="help">
+                    <h1>Lista darów które zostały przez Ciebie przekazane:</h1>
+                    <ul class="help--buttons">
+                        <li data-id="1"><a href="#" class="btn btn--without-border active">Oczekujące na
+                            odbiór</a></li>
+                        <li data-id="2"><a href="#" class="btn btn--without-border">Odebrane</a></li>
+                    </ul>
                     <form method="post">
                         {% csrf_token %}
-                        {% for donation in donations %}
-                            <li>
-                                <div class="col">
-                                    <div class="title">
-                                        Ilość worków: {{ donation.quantity }}, organizacja: {{ donation.institution }},
-                                        kategorie: {{ donation.get_cat }}, data przekazania: {{ donation.pick_up_date }}
-                                    </div>
-                                    <label for="is_taken" class="subtitle">
-                                        Czy odebrany?
-                                    </label>
-                                    <input id="is_taken" type="checkbox" name="is_taken_{{ donation.pk }}"
-                                           {% if donation.is_taken %}checked{% endif %}>
-                                </div>
-                            </li>
-                        {% endfor %}
+                        <!-- SLIDE 1 -->
+                        <div class="help--slides active" data-id="1">
+                            <ul class="help--slides-items">
+                                {% for donation in donations_waiting %}
+                                    <li>
+                                        <div class="col">
+                                            <div class="title">
+                                                Ilość worków: {{ donation.quantity }},
+                                                organizacja: {{ donation.institution }},
+                                                kategorie: {{ donation.get_cat }},
+                                                {% if donation.is_taken %}
+                                                data
+                                                przekazania: {{ donation.pick_up_date }}
+                                                {% endif %}
+                                            </div>
+                                            <label for="is_taken" class="subtitle">
+                                                Czy odebrany?
+                                            </label>
+                                            <input id="is_taken" type="checkbox" name="is_taken_{{ donation.pk }}"
+                                                   {% if donation.is_taken %}checked{% endif %}>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <!-- SLIDE 2 -->
+                        <div class="help--slides" data-id="2">
+                            <ul class="help--slides-items">
+                                {% for donation in donations_taken %}
+                                    <li>
+                                        <div class="col">
+                                            <div class="title">
+                                                Ilość worków: {{ donation.quantity }},
+                                                organizacja: {{ donation.institution }},
+                                                kategorie: {{ donation.get_cat }}, data
+                                                przekazania: {{ donation.pick_up_date }}
+                                            </div>
+                                            <label for="is_taken" class="subtitle">
+                                                Czy odebrany?
+                                            </label>
+                                            <input id="is_taken" type="checkbox" name="is_taken_{{ donation.pk }}"
+                                                   {% if donation.is_taken %}checked{% endif %}>{% if donation.is_taken %}Data: {{ donation.taken_check_date }}{% endif %}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                         <button type="submit" class="btn next-step">Zapisz zmiany</button>
                     </form>
-                </ul>
+                </section>
             </div>
         </div>
     </div>
