@@ -65,9 +65,19 @@ class ProfileView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
     def get(self, request, pk):
-        context = {'donations': Donation.objects.filter(user=User.objects.get(pk=pk))}
+        context = {'donations': Donation.objects.filter(user=User.objects.get(pk=pk)).order_by('-is_taken')}
         return render(request, 'charity_donation/profile.html', context)
 
+    def post(self, request, pk):
+        donations = Donation.objects.filter(user=request.user)
+        for donation in donations:
+            if request.POST.get(f"is_taken_{donation.pk}"):
+                donation.is_taken = True
+                donation.save()
+            else:
+                donation.is_taken = False
+                donation.save()
+        return redirect(reverse_lazy(f'profile', kwargs={'pk': pk}))
 
 class Login(View):
     def get(self, request):

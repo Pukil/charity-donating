@@ -1,6 +1,6 @@
 {% extends 'charity_donation/base.html' %}
 {% load static %}
-{% block headerclass %}class="header--form-page"{% endblock %}
+{% block headerclass %}{% endblock %}
 {% block header %}
     <div class="slogan container container--90">
         <div class="slogan--item">
@@ -10,21 +10,36 @@
                     <li>Imię: {{ user.first_name }}</li>
                     <li>Nazwisko: {{ user.last_name }}</li>
                     <li>Email: {{ user.email }}</li>
-                </ul><br>
-            <div class="help--slides active">
-                Lista darów które zostały przez Ciebie przekazane:
-                <ul class="help--slides-items">
-                    {% for donation in donations %}
-                        <li>
-                        <div class="col">
-                            Ilość worków: {{ donation.quantity }}, organizacja: {{ donation.institution }},
-                        kategorie: {{ donation.get_cat }}, data przekazania: {{ donation.pick_up_date }}
-                        </div>
-                        </li>
-                    {% endfor %}
                 </ul>
-            </div>
+                <br>
             </h1>
         </div>
+        <div class="slogan--item">
+            <div class="help--slides active">
+                <h1>Lista darów które zostały przez Ciebie przekazane:</h1>
+                <ul class="help--slides-items">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for donation in donations %}
+                            <li>
+                                <div class="col">
+                                    <div class="title">
+                                        Ilość worków: {{ donation.quantity }}, organizacja: {{ donation.institution }},
+                                        kategorie: {{ donation.get_cat }}, data przekazania: {{ donation.pick_up_date }}
+                                    </div>
+                                    <label for="is_taken" class="subtitle">
+                                        Czy odebrany?
+                                    </label>
+                                    <input id="is_taken" type="checkbox" name="is_taken_{{ donation.pk }}"
+                                           {% if donation.is_taken %}checked{% endif %}>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        <button type="submit" class="btn next-step">Zapisz zmiany</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
     </div>
+
 {% endblock %}
