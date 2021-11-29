@@ -2,6 +2,8 @@
 {% load static %}
 {% block headerclass %}{% endblock %}
 {% block content %}
+<div style="display: flex; justify-content: space-around; align-items: start;">
+
 
     <form id="edit_profile_form" method="post" action="" class="form--contact" style="
     display: flex;
@@ -10,7 +12,7 @@
     justify-content: center;
 ">
         {% csrf_token %}
-        {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+
         <h2>Edycja profilu {{ user }}</h2>
 
         <ul class="help--slides-items" style="padding-left: 0;">
@@ -56,4 +58,50 @@
         </ul>
 
     </form>
+    {% if error_message %}<h2>{{ error_message }}</h2>{% endif %}
+    <!-- Change password -->
+    <form id="edit_password_form" method="post" action="" class="form--contact" style="
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+">
+        {% csrf_token %}
+        <h2>Zmiana hasła {{ user }}</h2>
+
+        <ul class="help--slides-items" style="padding-left: 0;">
+            <li>
+                <div class="form-group form-group--inline">
+                    <label class="title">Wprowadź stare hasło:
+                        <input type="password"
+                               name="old_pass">
+                    </label>
+                </div>
+
+            </li>
+            <li>
+                <div class="form-group form-group--inline">
+                    <label>Wprowadź nowe hasło:
+                        <input type="password" name="new_pass_1">
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-group form-group--inline">
+                    <label>Wprowadź nowe hasło:
+                        <input type="password" name="new_pass_2">
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-group form-group--inline" style="display: flex; justify-content: center;">
+                    <button form="edit_password_form" name="change_password" type="submit" class="btn" style="align-self: center;">Zapisz
+                    </button>
+                </div>
+            </li>
+
+        </ul>
+
+    </form>
+</div>
 {% endblock %}

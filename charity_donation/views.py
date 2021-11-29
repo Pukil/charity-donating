@@ -68,8 +68,8 @@ class ProfileView(LoginRequiredMixin, View):
     redirect_field_name = 'next'
     def get(self, request, pk):
         context = {
-            'donations_taken': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=True),
-            'donations_waiting': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=False)
+            'donations_taken': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=True).order_by('pick_up_date'),
+            'donations_waiting': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=False).order_by('-pick_up_date')
         }
         return render(request, 'charity_donation/profile.html', context)
 
@@ -93,6 +93,33 @@ class EditProfileView(LoginRequiredMixin, View):
     def get(self, request, pk):
         return render(request, 'charity_donation/edit_profile.html')
 
+    def post(self, request, pk):
+        user_instance = request.user
+        if 'change_password' in request.POST:
+            if user_instance.check_password(request.POST.get('old_pass')):
+                new_password = request.POST.get('new_pass_1')
+                new_password_confirm = request.POST.get('new_pass_2')
+                if new_password == new_password_confirm:
+                    user_instance.set_password(new_password)
+                    user_instance.save()
+                    user = authenticate(request, username=user_instance.username, password=new_password)
+                    login(request, user)
+                    return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Zmieniono hasło'})
+                else:
+                    return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Wprowadzone hasła różnią się'})
+            else:
+                return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Wprowadzono niepoprawne hasło!'})
+        else:
+            if user_instance.check_password(request.POST.get('password')):
+                user_instance.first_name = request.POST.get('first_name')
+                user_instance.last_name = request.POST.get('last_name')
+                user_instance.email = request.POST.get('email')
+                user_instance.username = user_instance.email
+                user_instance.save()
+                return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Zmieniono dane'})
+            else:
+                return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Wprowadzono niepoprawne hasło!'})
+
 
 class Login(View):
     def get(self, request):
@@ -108,7 +135,7 @@ class Login(View):
                     login(request, user)
                     return redirect(reverse_lazy('landing-page'))
                 else:
-                    return redirect(reverse_lazy('login'))
+                    return render(request, 'charity_donation/login.html', {'error_message': "Błędne hasło"})
         except User.DoesNotExist:
             return redirect(reverse_lazy('register'))
 
