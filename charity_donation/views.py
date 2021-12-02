@@ -146,6 +146,8 @@ class Login(View):
                 if user is not None:
                     login(request, user)
                     return redirect(reverse_lazy('landing-page'))
+                elif not user.is_active:
+                    return render(request, 'charity_donation/login.html', {'error_message': "Proszę aktywować konto"})
                 else:
                     return render(request, 'charity_donation/login.html', {'error_message': "Błędne hasło"})
         except User.DoesNotExist:
