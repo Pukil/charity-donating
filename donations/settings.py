@@ -75,7 +75,16 @@ WSGI_APPLICATION = 'donations.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': config('ENGINE'),
+        'NAME': config('NAME'),
+        'HOST': config('HOST'),
+        'PASSWORD': config('PASSWORD'),
+        'USER': config('DB_USER'),
+        'PORT': config('PORT'),
+    }
+}
 
 
 
@@ -129,14 +138,6 @@ EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_FROM_USER = config('EMAIL_FROM_USER')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-
-
-try:
-    from donations.localsettings import DATABASES
-except ModuleNotFoundError:
-    print("No DB config in file")
-    print("Try again")
-    exit(0)
+#EMAIL_FROM_USER = config('EMAIL_FROM_USER')
+#DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
