@@ -3,13 +3,20 @@ import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 
 from charity_donation.models import Donation, Institution, Category
+from charity_donation.tokens import account_activation_token
 
 
 class LandingPage(View):
@@ -123,7 +130,12 @@ class EditProfileView(LoginRequiredMixin, View):
 
 class Login(View):
     def get(self, request):
-        return render(request, 'charity_donation/login.html')
+        if 'success_activation' in request.session:
+            context = {'error_message': request.session['success_activation']}
+            del request.session['success_activation']
+            return render(request, 'charity_donation/login.html', context)
+        else:
+            return render(request, 'charity_donation/login.html')
 
     def post(self, request):
         username = request.POST.get('email')
@@ -156,7 +168,36 @@ class Register(View):
         last_name = request.POST.get('surname')
         if request.POST.get('password') == request.POST.get('password2'):
             password = request.POST.get('password')
-            User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name, email=login)
-            return redirect(reverse_lazy('login'))
+            user = User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name, email=login)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Aktywuj swoje konto'
+            message = render_to_string('charity_donation/activation_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            to_email = login
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
+            return render(request, 'charity_donation/email_sent.html')
         else:
             return render(request, 'charity_donation/register.html', {'error_message': "Hasła nie są zgodne"})
+
+class ActivateAccount(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            request.session['success_activation'] = 'Twój adres e-mail został potwierdzony. Możesz się teraz zalogować'
+            return redirect(reverse_lazy('login'))
+
+        return render(request, 'charity_donation/activation_failed.html', {'user': user})
