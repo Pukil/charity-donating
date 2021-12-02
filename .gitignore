@@ -1,8 +1,8 @@
-donations/localsettings.py
-donations/secret_settings.py
+
+
 *.pyc
 *.idea
-
+*.env
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

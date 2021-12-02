@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from charity_donation.views import LandingPage, Login, Register, AddDonation, LogOut, ProfileView, EditProfileView
+from charity_donation.views import LandingPage, Login, Register, AddDonation, LogOut, ProfileView, EditProfileView, \
+    ActivateAccount
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +27,6 @@ urlpatterns = [
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
     path('logout/', LogOut.as_view(), name='logout'),
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
-    path('profile/edit/<int:pk>/', EditProfileView.as_view(), name='edit-profile')
+    path('profile/edit/<int:pk>/', EditProfileView.as_view(), name='edit-profile'),
+    path('activate_user/<uidb64>/<token>/', ActivateAccount.as_view(), name='activate-acc')
 ]

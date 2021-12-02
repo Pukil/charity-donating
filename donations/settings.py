@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -74,7 +75,16 @@ WSGI_APPLICATION = 'donations.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': config('ENGINE'),
+        'NAME': config('NAME'),
+        'HOST': config('HOST'),
+        'PASSWORD': config('PASSWORD'),
+        'USER': config('DB_USER'),
+        'PORT': config('PORT'),
+    }
+}
 
 
 
@@ -121,15 +131,13 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-try:
-    from donations.localsettings import DATABASES
-except ModuleNotFoundError:
-    print("No DB config in file")
-    print("Try again")
-    exit(0)
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+#EMAIL_FROM_USER = config('EMAIL_FROM_USER')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-try:
-    from donations.secret_settings import SECRET_KEY
-except ModuleNotFoundError:
-    print("No secret key found")
-    exit(0)
