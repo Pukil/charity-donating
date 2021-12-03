@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from charity_donation.views import LandingPage, Login, Register, AddDonation, LogOut, ProfileView, EditProfileView, \
-    ActivateAccount
+    ActivateAccount, PasswordReset
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,15 @@ urlpatterns = [
     path('logout/', LogOut.as_view(), name='logout'),
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
     path('profile/edit/<int:pk>/', EditProfileView.as_view(), name='edit-profile'),
-    path('activate_user/<uidb64>/<token>/', ActivateAccount.as_view(), name='activate-acc')
+    path('activate_user/<uidb64>/<token>/', ActivateAccount.as_view(), name='activate-acc'),
+    path('password_reset/done/',
+         auth_views.PasswordResetDoneView.as_view(template_name='charity_donation/password_reset_done.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="charity_donation/password_reset_confirm.html"),
+         name='password_reset_confirm'),
+    path('reset/done/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='charity_donation/password_reset_complete.html'),
+         name='password_reset_complete'),
+    path('password_reset/', PasswordReset.as_view(), name='password-reset' )
 ]
