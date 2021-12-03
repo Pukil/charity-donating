@@ -1,8 +1,10 @@
 import datetime
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
@@ -16,7 +18,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 
 from charity_donation.models import Donation, Institution, Category
-from charity_donation.tokens import account_activation_token
+from charity_donation.tokens import account_activation_token, reset_password_token
 
 
 class LandingPage(View):
@@ -63,8 +65,9 @@ class AddDonation(LoginRequiredMixin, View):
         pick_up_comment = request.POST.get('more_info')
         user = request.user
         instance = Donation.objects.create(quantity=quantity, institution=institution, address=address,
-                                phone_number=phone_number, city=city, zip_code=zip_code, pick_up_date=pick_up_date,
-                                pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
+                                           phone_number=phone_number, city=city, zip_code=zip_code,
+                                           pick_up_date=pick_up_date,
+                                           pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
         for category in categories:
             instance.categories.add(category)
         return render(request, 'charity_donation/form-confirmation.html')
@@ -73,10 +76,13 @@ class AddDonation(LoginRequiredMixin, View):
 class ProfileView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
+
     def get(self, request, pk):
         context = {
-            'donations_taken': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=True).order_by('pick_up_date'),
-            'donations_waiting': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=False).order_by('-pick_up_date')
+            'donations_taken': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=True).order_by(
+                'pick_up_date'),
+            'donations_waiting': Donation.objects.filter(user=User.objects.get(pk=pk)).filter(is_taken=False).order_by(
+                '-pick_up_date')
         }
         return render(request, 'charity_donation/profile.html', context)
 
@@ -113,9 +119,11 @@ class EditProfileView(LoginRequiredMixin, View):
                     login(request, user)
                     return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Zmieniono hasło'})
                 else:
-                    return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Wprowadzone hasła różnią się'})
+                    return render(request, 'charity_donation/edit_profile.html',
+                                  {'error_message': 'Wprowadzone hasła różnią się'})
             else:
-                return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Wprowadzono niepoprawne hasło!'})
+                return render(request, 'charity_donation/edit_profile.html',
+                              {'error_message': 'Wprowadzono niepoprawne hasło!'})
         else:
             if user_instance.check_password(request.POST.get('password')):
                 user_instance.first_name = request.POST.get('first_name')
@@ -125,7 +133,8 @@ class EditProfileView(LoginRequiredMixin, View):
                 user_instance.save()
                 return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Zmieniono dane'})
             else:
-                return render(request, 'charity_donation/edit_profile.html', {'error_message': 'Wprowadzono niepoprawne hasło!'})
+                return render(request, 'charity_donation/edit_profile.html',
+                              {'error_message': 'Wprowadzono niepoprawne hasło!'})
 
 
 class Login(View):
@@ -139,17 +148,22 @@ class Login(View):
 
     def post(self, request):
         username = request.POST.get('email')
+        password = request.POST.get('password')
         try:
             if User.objects.get(username=username):
-                password = request.POST.get('password')
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
+                    if not user.is_active:
+                        return render(request, 'charity_donation/login.html',
+                                      {'error_message': "Proszę aktywować konto"})
                     login(request, user)
                     return redirect(reverse_lazy('landing-page'))
-                elif not user.is_active:
-                    return render(request, 'charity_donation/login.html', {'error_message': "Proszę aktywować konto"})
                 else:
-                    return render(request, 'charity_donation/login.html', {'error_message': "Błędne hasło"})
+                    if User.objects.get(username=username):
+                        return render(request, 'charity_donation/login.html', {'error_message': "Błędne hasło"})
+
+
+
         except User.DoesNotExist:
             return redirect(reverse_lazy('register'))
 
@@ -170,7 +184,8 @@ class Register(View):
         last_name = request.POST.get('surname')
         if request.POST.get('password') == request.POST.get('password2'):
             password = request.POST.get('password')
-            user = User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name, email=login)
+            user = User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name,
+                                            email=login)
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
@@ -188,6 +203,7 @@ class Register(View):
         else:
             return render(request, 'charity_donation/register.html', {'error_message': "Hasła nie są zgodne"})
 
+
 class ActivateAccount(View):
     def get(self, request, uidb64, token):
         try:
@@ -203,3 +219,34 @@ class ActivateAccount(View):
             return redirect(reverse_lazy('login'))
 
         return render(request, 'charity_donation/activation_failed.html', {'user': user})
+
+
+class PasswordReset(View):
+    def get(self, request):
+        password_reset_form = PasswordResetForm()
+        return render(request=request, template_name="charity_donation/password_reset.html",
+                      context={"password_reset_form": password_reset_form})
+
+    def post(self, request):
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            email = password_reset_form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return render(request=request, template_name="charity_donation/password_reset.html",
+                              context={"password_reset_form": password_reset_form,
+                                       'error_message': 'Użytkownika nie ma w bazie danych'})
+            subject = "Zresetuj hasło"
+            current_site = get_current_site(request)
+            email_template_name = 'charity_donation/reset_email.html'
+            message = render_to_string(email_template_name, {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            to_email = user.email
+            email = EmailMessage(subject, message, to=[to_email])
+            email.send()
+            return redirect(reverse_lazy('password_reset_done'))
