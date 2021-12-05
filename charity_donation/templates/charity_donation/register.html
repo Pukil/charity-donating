@@ -1,35 +1,54 @@
 {% extends 'charity_donation/base.html' %}
 {% load static %}
 {% block headerclass %}{% endblock %}
-
+<style></style>
 {% block header %}
-        <section class="login-page">
-            <h2>Załóż konto</h2>
-            <form method="post" action="">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input type="text" name="name" placeholder="Imię"/>
-                </div>
-                <div class="form-group">
-                    <input type="text" name="surname" placeholder="Nazwisko"/>
-                </div>
-                <div class="form-group">
-                    <input type="email" name="email" placeholder="Email"/>
-                </div>
-                <div class="form-group">
-                    <input type="password" name="password" placeholder="Hasło"/>
-                </div>
-                <div class="form-group">
-                    <input type="password" name="password2" placeholder="Powtórz hasło"/>
-                </div>
+    <section class="login-page" style="display: flex; justify-content: center;">
+        <h2>Załóż konto</h2>
+        {% if error_message %}
+        <h2 class="errors">{{ error_message }}</h2>
+        {% endif %}
 
-                <div class="form-group form-group--buttons">
-                    <a href="{% url 'login' %}" class="btn btn--without-border">Zaloguj się</a>
-                    <button class="btn" type="submit">Załóż konto</button>
-                </div>
-            </form>
-        <p class="errors">{{ error_message }}</p>
-        </section>
+        <form method="post" action="" style="display: flex; justify-content: center; align-items: center;">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="name" placeholder="Imię"/>
+            </div>
+            <div class="form-group">
+                <input type="text" name="surname" placeholder="Nazwisko"/>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email"/>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Hasło"/>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password2" placeholder="Powtórz hasło"/>
+            </div>
+            <div id="pass-info">
+                <h3>Hasło powinno zawierać:</h3>
+                <p id="has-letter" class="invalid">Przynajmniej jedną <b>małą</b> literę</p>
+                <p id="has-capital" class="invalid">Przynajmniej jedną <b>wielką</b> literę</p>
+                <p id="has-number" class="invalid">Przynajmniej jedną <b>cyfrę</b></p>
+                <p id="has-symbol" class="invalid">Przynajmniej jeden <b>znak specjalny (!@#$%^&*)</b></p>
+                <p id="has-length" class="invalid">Minimum <b>8 znaków</b></p>
+                <p id="is-same" class="invalid">Wprowadzone hasła muszą być <b>takie same</b></p>
+            </div>
+            <div id="inputs-required">
+                <p id="is-name" class="invalid">Pole <b>"Imię"</b> nie może być puste</p>
+                <p id="is-lastname" class="invalid">Pole <b>"Nazwisko"</b> nie może być puste</p>
+                <p id="is-email" class="invalid">Pole <b>"Email"</b> nie może być puste</p>
+            </div>
+
+            <div class="form-group form-group--buttons">
+                <a href="{% url 'login' %}" class="btn btn--without-border">Zaloguj się</a>
+                <button class="btn" type="submit">Załóż konto</button>
+            </div>
+        </form>
+
+    </section>
 
 {% endblock %}
 

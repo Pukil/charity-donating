@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -184,8 +185,12 @@ class Register(View):
         last_name = request.POST.get('surname')
         if request.POST.get('password') == request.POST.get('password2'):
             password = request.POST.get('password')
-            user = User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name,
+            try:
+                user = User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name,
                                             email=login)
+            except IntegrityError:
+                return render(request, 'charity_donation/register.html', {'error_message': "Użytkownik istnieje"})
+
             user.is_active = False
             user.save()
             current_site = get_current_site(request)

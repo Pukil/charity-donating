@@ -5,8 +5,48 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Document</title>
+    <title>Oddaj w dobre ręce</title>
     <link rel="stylesheet" href="{% static 'charity_donation/css/style.css' %}"/>
+    <style>
+        #inputs-required {
+            display: none;
+            background: #f1f1f1;
+            color: #000;
+            position: relative;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        #pass-info {
+            display: block;
+            background: #f1f1f1;
+            color: #000;
+            position: relative;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+
+        .valid {
+            color: green;
+        }
+
+        .valid:before {
+            position: relative;
+            left: -35px;
+
+        }
+
+        .invalid {
+            color: red;
+        }
+
+        .invalid:before {
+            position: relative;
+            left: -35px;
+
+        }
+    </style>
 </head>
 <body>
 <header {% block headerclass %}{% endblock %}>
@@ -19,16 +59,16 @@
                         <li><a href="{% url 'profile' user.pk %}">Profil</a></li>
                         <li><a href="{% url 'edit-profile' user.pk %}">Ustawienia</a></li>
                         {% if user.is_superuser %}
-                        <li><a href="/admin">Panel administratora</a></li>
-                            {% endif %}
+                            <li><a href="/admin">Panel administratora</a></li>
+                        {% endif %}
                         <li><a href="{% url 'logout' %}">Wyloguj</a></li>
                     </ul>
                 </li>
             {% else %}
                 <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
 
-            <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
-        {% endif %}
+                <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+            {% endif %}
         </ul>
         <ul>
             <li><a href="{% url 'landing-page' %}" class="btn btn--without-border active">Start</a></li>
