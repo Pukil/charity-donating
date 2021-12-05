@@ -345,96 +345,102 @@ document.addEventListener("DOMContentLoaded", function () {
     const donationButtons = document.querySelector('.help--buttons');
 
     // no empty inputs
-    let firstNameField = document.querySelector('[name=name]');
-    let lastNameField = document.querySelector('[name=surname]');
-    let emailField = document.querySelector('[name=email]');
-    let reqInputs = document.querySelector('#inputs-required');
-    let inputsArray = [firstNameField, lastNameField, emailField];
-    inputsArray.forEach(element => element.addEventListener('blur', function(){
-        if (firstNameField.value.length < 1 || lastNameField.value.length < 1 || emailField.value.length < 1){
-        reqInputs.style.display = "block"
-    } else {
-        reqInputs.style.display = "none"
-    }
-    }))
+    try {
 
-    // password validation
-    let pass1 = document.querySelector('input[name=password]');
-    let pass2 = document.querySelector('input[name=password2]');
-    let msg = document.querySelector('#pass-info');
-    let letterCheck = document.querySelector('#has-letter');
-    let capitalCheck = document.querySelector('#has-capital');
-    let numberCheck = document.querySelector('#has-number');
-    let symbolCheck = document.querySelector('#has-symbol');
-    let lengthCheck = document.querySelector('#has-length');
-    let sameCheck = document.querySelector('#is-same');
-    let enabledButton = document.querySelector('[type=submit]');
-    let passes = [letterCheck, capitalCheck, numberCheck, symbolCheck, lengthCheck, sameCheck];
-    enabledButton.disabled = true
 
-    pass1.onkeyup = function() {
-        let lowerCaseChecker = /[a-z]/g;
-        if(pass1.value.match(lowerCaseChecker)){
-            letterCheck.classList.remove("invalid");
-            letterCheck.classList.add("valid");
-        } else {
-            letterCheck.classList.remove("valid");
-            letterCheck.classList.add("invalid");
-        }
+        let firstNameField = document.querySelector('[name=name]');
+        let lastNameField = document.querySelector('[name=surname]');
+        let emailField = document.querySelector('[name=email]');
+        let reqInputs = document.querySelector('#inputs-required');
+        let inputsArray = [firstNameField, lastNameField, emailField];
+        inputsArray.forEach(element => element.addEventListener('blur', function () {
+            if (firstNameField.value.length < 1 || lastNameField.value.length < 1 || emailField.value.length < 1) {
+                reqInputs.style.display = "block"
+            } else {
+                reqInputs.style.display = "none"
+            }
+        }))
 
-        let capitalChecker = /[A-Z]/g;
-        if(pass1.value.match(capitalChecker)){
-            capitalCheck.classList.remove("invalid");
-            capitalCheck.classList.add("valid");
-        } else {
-            capitalCheck.classList.remove("valid");
-            capitalCheck.classList.add("invalid");
-        }
+        // password validation
+        let pass1 = document.querySelector('input[name=password]');
+        let pass2 = document.querySelector('input[name=password2]');
+        let msg = document.querySelector('#pass-info');
+        let letterCheck = document.querySelector('#has-letter');
+        let capitalCheck = document.querySelector('#has-capital');
+        let numberCheck = document.querySelector('#has-number');
+        let symbolCheck = document.querySelector('#has-symbol');
+        let lengthCheck = document.querySelector('#has-length');
+        let sameCheck = document.querySelector('#is-same');
+        let enabledButton = document.querySelector('[type=submit]');
+        let passes = [letterCheck, capitalCheck, numberCheck, symbolCheck, lengthCheck, sameCheck];
+        enabledButton.disabled = true
 
-        let numberChecker = /[0-9]/g;
-        if(pass1.value.match(numberChecker)){
-            numberCheck.classList.remove("invalid");
-            numberCheck.classList.add("valid");
-        } else {
-            numberCheck.classList.remove("valid");
-            numberCheck.classList.add("invalid");
-        }
+        pass1.onkeyup = function () {
+            let lowerCaseChecker = /[a-z]/g;
+            if (pass1.value.match(lowerCaseChecker)) {
+                letterCheck.classList.remove("invalid");
+                letterCheck.classList.add("valid");
+            } else {
+                letterCheck.classList.remove("valid");
+                letterCheck.classList.add("invalid");
+            }
 
-        let symbolChecker = /[!@#$%^&*]/g;
-        if(pass1.value.match(symbolChecker)){
-            symbolCheck.classList.remove("invalid");
-            symbolCheck.classList.add("valid");
-        } else {
-            symbolCheck.classList.remove("valid");
-            symbolCheck.classList.add("invalid");
-        }
+            let capitalChecker = /[A-Z]/g;
+            if (pass1.value.match(capitalChecker)) {
+                capitalCheck.classList.remove("invalid");
+                capitalCheck.classList.add("valid");
+            } else {
+                capitalCheck.classList.remove("valid");
+                capitalCheck.classList.add("invalid");
+            }
 
-        if(pass1.value.length >=8){
-            lengthCheck.classList.remove("invalid");
-            lengthCheck.classList.add("valid");
-        } else {
-            lengthCheck.classList.remove("valid");
-            lengthCheck.classList.add("invalid");
-        }
+            let numberChecker = /[0-9]/g;
+            if (pass1.value.match(numberChecker)) {
+                numberCheck.classList.remove("invalid");
+                numberCheck.classList.add("valid");
+            } else {
+                numberCheck.classList.remove("valid");
+                numberCheck.classList.add("invalid");
+            }
 
-        if(pass1.value === pass2.value){
-            sameCheck.classList.remove("invalid");
-            sameCheck.classList.add("valid");
-        } else {
-            sameCheck.classList.remove("valid");
-            sameCheck.classList.add("invalid");
+            let symbolChecker = /[!@#$%^&*]/g;
+            if (pass1.value.match(symbolChecker)) {
+                symbolCheck.classList.remove("invalid");
+                symbolCheck.classList.add("valid");
+            } else {
+                symbolCheck.classList.remove("valid");
+                symbolCheck.classList.add("invalid");
+            }
+
+            if (pass1.value.length >= 8) {
+                lengthCheck.classList.remove("invalid");
+                lengthCheck.classList.add("valid");
+            } else {
+                lengthCheck.classList.remove("valid");
+                lengthCheck.classList.add("invalid");
+            }
+
+            if (pass1.value === pass2.value) {
+                sameCheck.classList.remove("invalid");
+                sameCheck.classList.add("valid");
+            } else {
+                sameCheck.classList.remove("valid");
+                sameCheck.classList.add("invalid");
+            }
+            enabledButton.disabled = !(passes.every(condition => condition.classList.contains('valid')) && reqInputs.style.display === "none");
         }
-        enabledButton.disabled = !(passes.every(condition => condition.classList.contains('valid')) && reqInputs.style.display === "none");
-    }
-    pass2.onkeyup = function() {
-         if(pass1.value === pass2.value){
-            sameCheck.classList.remove("invalid");
-            sameCheck.classList.add("valid");
-        } else {
-            sameCheck.classList.remove("valid");
-            sameCheck.classList.add("invalid");
+        pass2.onkeyup = function () {
+            if (pass1.value === pass2.value) {
+                sameCheck.classList.remove("invalid");
+                sameCheck.classList.add("valid");
+            } else {
+                sameCheck.classList.remove("valid");
+                sameCheck.classList.add("invalid");
+            }
+            enabledButton.disabled = !(passes.every(condition => condition.classList.contains('valid')) && reqInputs.style.display === "none");
         }
-         enabledButton.disabled = !(passes.every(condition => condition.classList.contains('valid'))&& reqInputs.style.display === "none");
+    } catch (e) {
+        
     }
 
 
