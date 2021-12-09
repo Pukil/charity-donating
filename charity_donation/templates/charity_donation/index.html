@@ -17,15 +17,13 @@
             <div class="stats--item">
                 <em>{{ bags_count }}</em>
                 <h3>Oddanych worków</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum
-                    tempora!</p>
+                <p>Nasi użytkownicy przekazali już tyle worków!</p>
             </div>
 
             <div class="stats--item">
                 <em>{{ institution_count }}</em>
                 <h3>Wspartych organizacji</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate
-                    quas quam.</p>
+                <p>Tyle organizacji odebrało już dary.</p>
             </div>
 
         </div>
@@ -63,8 +61,8 @@
     <section id="about-us" class="about-us">
         <div class="about-us--text">
             <h2>O nas</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt
-                libero optio esse quisquam illo omnis.</p>
+            <p>Jesteśmy zespołem, który postanowil pomóc ludziom w potrzebie jednocześnie pozbywając się nieużywanych
+                przez nas rzeczy.</p>
             <img src="{% static 'charity_donation/images/signature.svg' %}" class="about-us--text-signature"
                  alt="Signature"/>
         </div>
@@ -89,10 +87,10 @@
             <ul class="help--slides-items">
                 {% for foundation in foundations %}
                     <li>
-                    <div class="col">
-                        <div class="title">Fundacja "{{ foundation.name }}"</div>
-                        <div class="subtitle">Cel i misja: {{ foundation.description }}</div>
-                    </div>
+                        <div class="col">
+                            <div class="title">Fundacja "{{ foundation.name }}"</div>
+                            <div class="subtitle">Cel i misja: {{ foundation.description }}</div>
+                        </div>
                         <div class="col">
                             <div class="text">{{ foundation.get_cat }}</div>
                         </div>

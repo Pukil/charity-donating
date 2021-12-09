@@ -31,6 +31,7 @@ class Institution(models.Model):
 
         return return_string.rstrip(", ")
 
+
 class Donation(models.Model):
     quantity = models.IntegerField()
     categories = models.ManyToManyField(Category)

@@ -36,8 +36,8 @@
                                                 organizacja: {{ donation.institution }},
                                                 kategorie: {{ donation.get_cat }},
                                                 {% if donation.is_taken %}
-                                                data
-                                                przekazania: {{ donation.pick_up_date }}
+                                                    data
+                                                    przekazania: {{ donation.pick_up_date }}
                                                 {% endif %}
                                             </div>
                                             <label for="is_taken" class="subtitle">
@@ -66,7 +66,8 @@
                                                 Czy odebrany?
                                             </label>
                                             <input id="is_taken" type="checkbox" name="is_taken_{{ donation.pk }}"
-                                                   {% if donation.is_taken %}checked{% endif %}>{% if donation.is_taken %}Data: {{ donation.taken_check_date }}{% endif %}
+                                                   {% if donation.is_taken %}checked{% endif %}>
+                                            {% if donation.is_taken %}Data: {{ donation.taken_check_date }}{% endif %}
                                         </div>
                                     </li>
                                 {% endfor %}

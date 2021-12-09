@@ -150,20 +150,21 @@ class Login(View):
     def post(self, request):
         username = request.POST.get('email')
         password = request.POST.get('password')
+
         try:
-            if User.objects.get(username=username):
+            user_instance = User.objects.get(username=username)
+            if user_instance:
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
-                    if not user.is_active:
-                        return render(request, 'charity_donation/login.html',
-                                      {'error_message': "Proszę aktywować konto"})
-                    login(request, user)
-                    return redirect(reverse_lazy('landing-page'))
+                    if user.is_active:
+                        login(request, user)
+                        return redirect(reverse_lazy('landing-page'))
+                    return render(request, 'charity_donation/login.html',
+                                  {'error_message': "Proszę aktywować konto"})
                 else:
                     if User.objects.get(username=username):
-                        return render(request, 'charity_donation/login.html', {'error_message': "Błędne hasło"})
-
-
+                        return render(request, 'charity_donation/login.html',
+                                      {'error_message': "Błędne hasło lub nieaktywowane konto"})
 
         except User.DoesNotExist:
             return redirect(reverse_lazy('register'))
@@ -187,7 +188,8 @@ class Register(View):
             password = request.POST.get('password')
             try:
                 user = User.objects.create_user(login, password=password, first_name=first_name, last_name=last_name,
-                                            email=login)
+                                                email=login)
+                user.set_password(password)
             except IntegrityError:
                 return render(request, 'charity_donation/register.html', {'error_message': "Użytkownik istnieje"})
 
