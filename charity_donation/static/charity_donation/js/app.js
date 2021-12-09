@@ -282,63 +282,64 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
 
 
-    triggerButton.addEventListener("click", function () {
-        const bagNumber = document.querySelector('#bagnumber').value
-        switch (bagNumber) {
-            case '1':
-                document.querySelector('#bags').innerHTML = `${bagNumber} worek`
-                break;
-            case '2':
-            case '3':
-            case '4':
-                document.querySelector('#bags').innerHTML = `${bagNumber} worki`
-                break;
-            default:
-                document.querySelector('#bags').innerHTML = `${bagNumber} worków`
-                break;
-        }
+        triggerButton.addEventListener("click", function () {
+            const bagNumber = document.querySelector('#bagnumber').value
+            switch (bagNumber) {
+                case '1':
+                    document.querySelector('#bags').innerHTML = `${bagNumber} worek`
+                    break;
+                case '2':
+                case '3':
+                case '4':
+                    document.querySelector('#bags').innerHTML = `${bagNumber} worki`
+                    break;
+                default:
+                    document.querySelector('#bags').innerHTML = `${bagNumber} worków`
+                    break;
+            }
 
-        allInstitutions.forEach(function (institution) {
-            if (institution.firstElementChild.firstElementChild.checked) {
+            allInstitutions.forEach(function (institution) {
+                if (institution.firstElementChild.firstElementChild.checked) {
 
-                switch (institution.getAttribute('data-type')) {
-                    case 'fundacja':
-                        document.querySelector('#chosen-institution').innerHTML = `Dla fundacji "${institution.getAttribute('data-name')}"`
-                        break;
-                    case 'organizacja pozarządowa':
-                        document.querySelector('#chosen-institution').innerHTML = `Dla organizacji pozarządowej "${institution.getAttribute('data-name')}"`
-                        break;
-                    case 'zbiórka lokalna':
-                        document.querySelector('#chosen-institution').innerHTML = `Dla zbiórki lokalnej "${institution.getAttribute('data-name')}"`
-                        break;
+                    switch (institution.getAttribute('data-type')) {
+                        case 'fundacja':
+                            document.querySelector('#chosen-institution').innerHTML = `Dla fundacji "${institution.getAttribute('data-name')}"`
+                            break;
+                        case 'organizacja pozarządowa':
+                            document.querySelector('#chosen-institution').innerHTML = `Dla organizacji pozarządowej "${institution.getAttribute('data-name')}"`
+                            break;
+                        case 'zbiórka lokalna':
+                            document.querySelector('#chosen-institution').innerHTML = `Dla zbiórki lokalnej "${institution.getAttribute('data-name')}"`
+                            break;
+                    }
+
                 }
+            })
 
+            document.querySelector('#summary-address').innerHTML = document.querySelector("#address").value
+            document.querySelector('#summary-city').innerHTML = document.querySelector("#city").value
+            document.querySelector('#summary-postcode').innerHTML = document.querySelector("#postcode").value
+            document.querySelector('#summary-phone').innerHTML = document.querySelector("#phone").value
+            document.querySelector('#summary-data').innerHTML = document.querySelector("#data").value
+            document.querySelector('#summary-time').innerHTML = document.querySelector("#time").value
+            if (document.querySelector("#more-info").value.length === 0) {
+                document.querySelector('#summary-info').innerHTML = 'Brak uwag'
+            } else {
+                document.querySelector('#summary-info').innerHTML = document.querySelector("#more-info").value
             }
         })
-
-        document.querySelector('#summary-address').innerHTML = document.querySelector("#address").value
-        document.querySelector('#summary-city').innerHTML = document.querySelector("#city").value
-        document.querySelector('#summary-postcode').innerHTML = document.querySelector("#postcode").value
-        document.querySelector('#summary-phone').innerHTML = document.querySelector("#phone").value
-        document.querySelector('#summary-data').innerHTML = document.querySelector("#data").value
-        document.querySelector('#summary-time').innerHTML = document.querySelector("#time").value
-        if (document.querySelector("#more-info").value.length === 0) {
-            document.querySelector('#summary-info').innerHTML = 'Brak uwag'
-        } else {
-            document.querySelector('#summary-info').innerHTML = document.querySelector("#more-info").value
-        }
-    })} catch (e) {
+    } catch (e) {
 
     }
 
 //    submit button
     try {
         const submitButton = document.querySelector('#submit-button')
-    submitButton.addEventListener("click", function () {
-        document.querySelector("#form").submit()
-    })
-    } catch (e) {}
-
+        submitButton.addEventListener("click", function () {
+            document.querySelector("#form").submit()
+        })
+    } catch (e) {
+    }
 
 
     // donation slide change
@@ -371,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let symbolCheck = document.querySelector('#has-symbol');
         let lengthCheck = document.querySelector('#has-length');
         let sameCheck = document.querySelector('#is-same');
-        let enabledButton = document.querySelector('[type=submit]');
+        let enabledButton = document.querySelector('#register-button');
         let passes = [letterCheck, capitalCheck, numberCheck, symbolCheck, lengthCheck, sameCheck];
         enabledButton.disabled = true
 
@@ -440,9 +441,8 @@ document.addEventListener("DOMContentLoaded", function () {
             enabledButton.disabled = !(passes.every(condition => condition.classList.contains('valid')) && reqInputs.style.display === "none");
         }
     } catch (e) {
-        
-    }
 
+    }
 
 
 });
