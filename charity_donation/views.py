@@ -8,7 +8,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.db import IntegrityError
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
